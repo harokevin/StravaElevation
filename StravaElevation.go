@@ -10,11 +10,11 @@ import (
 	"time"
 	"strings"
 	"os"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func main() {
+func HandleLambdaEvent() (lambdaOutput string, error error) {
 	stravaAccessToken := getStravaAccessToken()
-	log.Println(stravaAccessToken)
 
 	timeout := time.Duration(5 * time.Second)
 	client := http.Client{
@@ -100,6 +100,11 @@ func main() {
 	} else {
 		log.Fatalln("Unable to find the newest activity")
 	}
+	return "Execution Finished With No Errors", nil
+}
+
+func main() {
+	lambda.Start(HandleLambdaEvent)
 }
 
 func updateActivityDescription(activityId float64, description string, stravaAccessToken string) {
